@@ -11,7 +11,7 @@ const StyledSafeAreaView = styled(SafeAreaView);
 const PricingScreen = () => {
     const plans = [
         { name: 'DROP IN', price: '$15', period: '/visit', features: ['Gym Access', 'Locker Room'] },
-        { name: 'MONTHLY', price: '$45', period: '/month', features: ['Unlimited Access', 'All Classes', 'Guest Pass (1)', 'No Contract'], highlight: true },
+        { name: 'MONTHLY', price: '$45', period: '/month', features: ['Unlimited Access', 'All Benefits', 'Guest Pass (1)', 'No Contract'], highlight: true },
         { name: 'ANNUAL', price: '$450', period: '/year', features: ['All Monthly Perks', 'Personal Training Session', 'Merch Pack', 'Priority Booking'] }
     ];
 

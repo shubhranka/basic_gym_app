@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowRight, LogOut } from 'lucide-react-native';
-import { auth, db, appId } from '../config/firebase';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+// import { auth, db, appId } from '../config/firebase'; // Disabled for in-memory
+// import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'; // Disabled for in-memory
 import { styled } from 'nativewind';
 
 const StyledView = styled(View);
@@ -15,19 +15,18 @@ const StyledScrollView = styled(ScrollView);
 
 const MemberDashboard = ({ navigation }) => {
     const [activeTab, setActiveTab] = useState('card');
-    const [formData, setFormData] = useState({ name: 'Demo User', phone: '', emergency: '' });
-    const [isEditing, setIsEditing] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({ name: 'Demo User', phone: '555-0123', emergency: '555-9876' });
 
-    const userId = auth.currentUser?.uid || 'demo-user';
+    const userId = 'demo-user-123'; // Static ID for in-memory
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${userId}&color=000000&bgcolor=FFFFFF`;
+
+    useEffect(() => {
+        // Mock fetch
+        console.log("Fetching user data (mock)...");
+    }, []);
 
     const handleLogout = () => {
         navigation.replace('Login');
-    };
-
-    const handleUpdate = async () => {
-        setIsEditing(false);
     };
 
     return (
@@ -102,39 +101,12 @@ const MemberDashboard = ({ navigation }) => {
                             <StyledView key={field}>
                                 <StyledText className="text-xs font-bold text-zinc-500 uppercase mb-2">{field}</StyledText>
                                 <StyledTextInput
-                                    editable={isEditing}
+                                    editable={false}
                                     value={formData[field]}
-                                    onChangeText={(text) => setFormData({ ...formData, [field]: text })}
-                                    className={`w-full bg-white border-b-2 py-2 text-zinc-900 ${isEditing ? 'border-lime-500' : 'border-zinc-200 text-zinc-500'}`}
+                                    className="w-full bg-white border-b-2 py-2 text-zinc-500 border-zinc-200"
                                 />
                             </StyledView>
                         ))}
-
-                        <StyledView className="pt-6">
-                            {!isEditing ? (
-                                <StyledTouchableOpacity
-                                    onPress={() => setIsEditing(true)}
-                                    className="w-full bg-zinc-950 py-4 items-center"
-                                >
-                                    <StyledText className="text-white text-xs font-bold uppercase">Edit Details</StyledText>
-                                </StyledTouchableOpacity>
-                            ) : (
-                                <StyledView className="flex-row gap-4">
-                                    <StyledTouchableOpacity
-                                        onPress={() => setIsEditing(false)}
-                                        className="flex-1 py-4 border border-zinc-300 items-center bg-white"
-                                    >
-                                        <StyledText className="text-zinc-500 text-xs font-bold uppercase">Cancel</StyledText>
-                                    </StyledTouchableOpacity>
-                                    <StyledTouchableOpacity
-                                        onPress={handleUpdate}
-                                        className="flex-1 py-4 bg-lime-400 items-center"
-                                    >
-                                        <StyledText className="text-zinc-950 text-xs font-bold uppercase">Save</StyledText>
-                                    </StyledTouchableOpacity>
-                                </StyledView>
-                            )}
-                        </StyledView>
                     </StyledView>
                 )}
 

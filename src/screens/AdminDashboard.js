@@ -10,22 +10,97 @@ const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledScrollView = styled(ScrollView);
 
+import { CameraView, useCameraPermissions } from 'expo-camera';
+
 const AdminDashboard = ({ navigation }) => {
     const [activeView, setActiveView] = useState('dashboard');
     const [scanInput, setScanInput] = useState('');
     const [lastCheckIn, setLastCheckIn] = useState(null);
+    const [isScanning, setIsScanning] = useState(false);
+    const [permission, requestPermission] = useCameraPermissions();
 
-    const attendance = [];
-    const members = [
+    // Member creation state
+    const [newMemberName, setNewMemberName] = useState('');
+    const [members, setMembers] = useState([
         { id: '1', name: 'John Doe', uid: '12345678', status: 'Active', joinDate: '2024-01-01' },
         { id: '2', name: 'Jane Smith', uid: '87654321', status: 'Active', joinDate: '2024-02-15' },
-    ];
+    ]);
 
-    const handleCheckIn = () => {
-        if (!scanInput.trim()) return;
-        setLastCheckIn({ name: 'Demo Member', time: new Date().toLocaleTimeString() });
+    const attendance = [];
+
+    const handleCheckIn = (uid) => {
+        const idToCheck = uid || scanInput;
+        if (!idToCheck?.trim()) return;
+
+        setLastCheckIn({
+            name: uid ? `Member ${uid.substring(0, 6)}` : 'Demo Member',
+            time: new Date().toLocaleTimeString()
+        });
         setScanInput('');
+        setIsScanning(false);
     };
+
+    const handleAddMember = () => {
+        if (!newMemberName.trim()) {
+            alert('Please enter a name');
+            return;
+        }
+
+        const newId = Math.random().toString(36).substr(2, 9);
+        const newUid = Math.floor(10000000 + Math.random() * 90000000).toString();
+
+        const newMember = {
+            id: newId,
+            name: newMemberName,
+            uid: newUid,
+            status: 'Active',
+            joinDate: new Date().toISOString().split('T')[0]
+        };
+
+        setMembers([...members, newMember]);
+        setNewMemberName('');
+        setActiveView('members');
+        alert(`Member Created! UID: ${newUid}`);
+    };
+
+    const handleBarCodeScanned = ({ data }) => {
+        handleCheckIn(data);
+        alert(`Scanned: ${data}`);
+    };
+
+    const startScanning = async () => {
+        if (!permission?.granted) {
+            const { granted } = await requestPermission();
+            if (!granted) return;
+        }
+        setIsScanning(true);
+    };
+
+    if (isScanning) {
+        return (
+            <StyledView className="flex-1 bg-black">
+                <CameraView
+                    style={{ flex: 1 }}
+                    facing="back"
+                    onBarcodeScanned={handleBarCodeScanned}
+                    barcodeScannerSettings={{
+                        barcodeTypes: ["qr"],
+                    }}
+                >
+                    <StyledView className="flex-1 justify-between p-10">
+                        <StyledTouchableOpacity
+                            onPress={() => setIsScanning(false)}
+                            className="self-end bg-black/50 p-2 rounded-full"
+                        >
+                            <StyledText className="text-white font-bold">Close</StyledText>
+                        </StyledTouchableOpacity>
+                        <StyledView className="border-2 border-lime-400 h-64 w-64 self-center rounded-lg opacity-50" />
+                        <StyledText className="text-white text-center bg-black/50 p-2 rounded">Scan Member QR Code</StyledText>
+                    </StyledView>
+                </CameraView>
+            </StyledView>
+        );
+    }
 
     return (
         <StyledView className="flex-1 bg-zinc-100">
@@ -67,7 +142,7 @@ const AdminDashboard = ({ navigation }) => {
                     <StyledScrollView>
                         <StyledView className="bg-white p-6 shadow-xl border-t-4 border-lime-400 mb-6 rounded-lg">
                             <StyledText className="text-xs font-bold text-zinc-500 uppercase mb-4">Manual Entry / Scanner Input</StyledText>
-                            <StyledView className="flex-row gap-2">
+                            <StyledView className="flex-row gap-2 mb-4">
                                 <StyledTextInput
                                     value={scanInput}
                                     onChangeText={setScanInput}
@@ -75,12 +150,20 @@ const AdminDashboard = ({ navigation }) => {
                                     className="flex-1 bg-zinc-50 border-2 border-zinc-200 p-3 font-mono text-lg focus:border-zinc-950"
                                 />
                                 <StyledTouchableOpacity
-                                    onPress={handleCheckIn}
+                                    onPress={() => handleCheckIn()}
                                     className="bg-zinc-950 px-6 justify-center items-center"
                                 >
                                     <StyledText className="text-white font-bold uppercase">Log</StyledText>
                                 </StyledTouchableOpacity>
                             </StyledView>
+
+                            <StyledTouchableOpacity
+                                onPress={startScanning}
+                                className="w-full py-4 bg-lime-100 border border-lime-400 items-center justify-center rounded-lg flex-row"
+                            >
+                                <QrCode size={20} color="#4d7c0f" />
+                                <StyledText className="text-lime-800 font-bold uppercase ml-2">Open Camera Scanner</StyledText>
+                            </StyledTouchableOpacity>
                         </StyledView>
 
                         {lastCheckIn && (
@@ -114,7 +197,16 @@ const AdminDashboard = ({ navigation }) => {
 
                 {activeView === 'members' && (
                     <StyledView className="bg-white border border-zinc-200 rounded-lg overflow-hidden flex-1">
-                        <StyledView className="flex-row bg-zinc-50 border-b border-zinc-200 p-4">
+                        <StyledView className="p-4 border-b border-zinc-200 flex-row justify-between items-center bg-zinc-50">
+                            <StyledText className="text-xs font-bold text-zinc-500 uppercase">Member List</StyledText>
+                            <StyledTouchableOpacity
+                                onPress={() => setActiveView('add_member')}
+                                className="bg-lime-400 px-3 py-1 rounded"
+                            >
+                                <StyledText className="text-xs font-bold text-zinc-950 uppercase">+ Add New</StyledText>
+                            </StyledTouchableOpacity>
+                        </StyledView>
+                        <StyledView className="flex-row bg-zinc-100 border-b border-zinc-200 p-4">
                             <StyledText className="flex-1 text-xs font-bold text-zinc-500 uppercase">Name</StyledText>
                             <StyledText className="w-20 text-xs font-bold text-zinc-500 uppercase">Status</StyledText>
                         </StyledView>
@@ -135,6 +227,37 @@ const AdminDashboard = ({ navigation }) => {
                                 </StyledView>
                             )}
                         />
+                    </StyledView>
+                )}
+
+                {activeView === 'add_member' && (
+                    <StyledView className="bg-white p-6 shadow-xl border-t-4 border-lime-400 rounded-lg">
+                        <StyledText className="text-xl font-black text-zinc-950 uppercase mb-6">Create New Member</StyledText>
+
+                        <StyledView className="mb-6">
+                            <StyledText className="text-xs font-bold text-zinc-500 uppercase mb-2">Full Name</StyledText>
+                            <StyledTextInput
+                                value={newMemberName}
+                                onChangeText={setNewMemberName}
+                                placeholder="e.g. Alex Johnson"
+                                className="w-full bg-zinc-50 border-2 border-zinc-200 p-4 font-bold text-lg focus:border-lime-400"
+                            />
+                        </StyledView>
+
+                        <StyledView className="flex-row gap-4">
+                            <StyledTouchableOpacity
+                                onPress={() => setActiveView('members')}
+                                className="flex-1 py-4 border-2 border-zinc-200 items-center justify-center"
+                            >
+                                <StyledText className="text-zinc-500 font-bold uppercase">Cancel</StyledText>
+                            </StyledTouchableOpacity>
+                            <StyledTouchableOpacity
+                                onPress={handleAddMember}
+                                className="flex-1 py-4 bg-zinc-950 items-center justify-center"
+                            >
+                                <StyledText className="text-white font-bold uppercase">Create Member</StyledText>
+                            </StyledTouchableOpacity>
+                        </StyledView>
                     </StyledView>
                 )}
             </StyledView>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Activity } from 'lucide-react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
+// import { signInWithEmailAndPassword } from 'firebase/auth'; // Disabled
+// import { auth } from '../config/firebase'; // Disabled
 import { styled } from 'nativewind';
 
 const StyledView = styled(View);
@@ -17,6 +17,7 @@ const LoginScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async (role) => {
+        // Mock login
         if (role === 'admin') {
             navigation.replace('Admin');
         } else {
