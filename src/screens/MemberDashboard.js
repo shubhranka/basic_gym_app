@@ -52,7 +52,7 @@ const MemberDashboard = ({ navigation }) => {
 
             <StyledView className="bg-zinc-950 px-6 pb-6">
                 <StyledView className="flex-row bg-zinc-900 p-1 rounded-lg">
-                    {['card', 'profile', 'alerts'].map(tab => (
+                    {['card', 'profile', 'alerts', 'tools'].map(tab => (
                         <StyledTouchableOpacity
                             key={tab}
                             onPress={() => setActiveTab(tab)}
@@ -121,6 +121,80 @@ const MemberDashboard = ({ navigation }) => {
                                 <StyledText className="text-sm text-zinc-500">{alert.desc}</StyledText>
                             </StyledView>
                         ))}
+                    </StyledView>
+                )}
+
+                {activeTab === 'tools' && (
+                    <StyledView className="flex-row flex-wrap justify-between">
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('WorkoutLog')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">💪</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Workout Log</StyledText>
+                        </StyledTouchableOpacity>
+
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('Booking')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">📅</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Book Class</StyledText>
+                        </StyledTouchableOpacity>
+
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('Nutrition')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">🥗</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Nutrition</StyledText>
+                        </StyledTouchableOpacity>
+
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('Chat')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">💬</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Trainer Chat</StyledText>
+                        </StyledTouchableOpacity>
+
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('Store')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">🛍️</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Store</StyledText>
+                        </StyledTouchableOpacity>
+
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('Blog')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">📰</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Blog</StyledText>
+                        </StyledTouchableOpacity>
+
+                        <StyledTouchableOpacity
+                            className="bg-white p-6 rounded-xl w-[48%] mb-4 shadow-sm border border-zinc-100 items-center"
+                            onPress={() => navigation.navigate('SuccessStories')}
+                        >
+                            <StyledView className="w-12 h-12 bg-lime-100 rounded-full items-center justify-center mb-3">
+                                <StyledText className="text-2xl">🏆</StyledText>
+                            </StyledView>
+                            <StyledText className="font-bold text-zinc-900 text-center">Success Stories</StyledText>
+                        </StyledTouchableOpacity>
                     </StyledView>
                 )}
             </StyledScrollView>

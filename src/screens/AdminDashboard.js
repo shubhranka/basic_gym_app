@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Activity, QrCode, Users, ArrowRight } from 'lucide-react-native';
+import { Activity, QrCode, Users, ArrowRight, BarChart3, CreditCard } from 'lucide-react-native';
 import { styled } from 'nativewind';
 
 const StyledView = styled(View);
@@ -115,22 +115,41 @@ const AdminDashboard = ({ navigation }) => {
                     </TouchableOpacity>
                 </StyledView>
 
-                <StyledView className="flex-row gap-4">
+                <StyledScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 0 }}
+                    className="flex-row"
+                >
                     <StyledTouchableOpacity
                         onPress={() => setActiveView('dashboard')}
-                        className={`flex-1 flex-row items-center justify-center p-3 rounded-lg ${activeView === 'dashboard' ? 'bg-lime-400' : 'bg-zinc-900'}`}
+                        className={`mr-4 flex-row items-center justify-center p-3 px-6 rounded-lg ${activeView === 'dashboard' ? 'bg-lime-400' : 'bg-zinc-900'}`}
                     >
                         <QrCode size={20} color={activeView === 'dashboard' ? '#09090b' : '#a1a1aa'} />
                         <StyledText className={`ml-2 text-xs font-bold uppercase ${activeView === 'dashboard' ? 'text-zinc-950' : 'text-zinc-400'}`}>Kiosk</StyledText>
                     </StyledTouchableOpacity>
                     <StyledTouchableOpacity
                         onPress={() => setActiveView('members')}
-                        className={`flex-1 flex-row items-center justify-center p-3 rounded-lg ${activeView === 'members' ? 'bg-lime-400' : 'bg-zinc-900'}`}
+                        className={`mr-4 flex-row items-center justify-center p-3 px-6 rounded-lg ${activeView === 'members' ? 'bg-lime-400' : 'bg-zinc-900'}`}
                     >
                         <Users size={20} color={activeView === 'members' ? '#09090b' : '#a1a1aa'} />
                         <StyledText className={`ml-2 text-xs font-bold uppercase ${activeView === 'members' ? 'text-zinc-950' : 'text-zinc-400'}`}>Members</StyledText>
                     </StyledTouchableOpacity>
-                </StyledView>
+                    <StyledTouchableOpacity
+                        onPress={() => setActiveView('analytics')}
+                        className={`mr-4 flex-row items-center justify-center p-3 px-6 rounded-lg ${activeView === 'analytics' ? 'bg-lime-400' : 'bg-zinc-900'}`}
+                    >
+                        <BarChart3 size={20} color={activeView === 'analytics' ? '#09090b' : '#a1a1aa'} />
+                        <StyledText className={`ml-2 text-xs font-bold uppercase ${activeView === 'analytics' ? 'text-zinc-950' : 'text-zinc-400'}`}>Stats</StyledText>
+                    </StyledTouchableOpacity>
+                    <StyledTouchableOpacity
+                        onPress={() => setActiveView('payments')}
+                        className={`flex-row items-center justify-center p-3 px-6 rounded-lg ${activeView === 'payments' ? 'bg-lime-400' : 'bg-zinc-900'}`}
+                    >
+                        <CreditCard size={20} color={activeView === 'payments' ? '#09090b' : '#a1a1aa'} />
+                        <StyledText className={`ml-2 text-xs font-bold uppercase ${activeView === 'payments' ? 'text-zinc-950' : 'text-zinc-400'}`}>Billing</StyledText>
+                    </StyledTouchableOpacity>
+                </StyledScrollView>
             </StyledView>
 
             <StyledView className="flex-1 p-6">
@@ -258,6 +277,68 @@ const AdminDashboard = ({ navigation }) => {
                                 <StyledText className="text-white font-bold uppercase">Create Member</StyledText>
                             </StyledTouchableOpacity>
                         </StyledView>
+                    </StyledView>
+                )}
+
+                {activeView === 'analytics' && (
+                    <StyledScrollView>
+                        <StyledView className="bg-white p-6 shadow-xl border-t-4 border-lime-400 mb-6 rounded-lg">
+                            <StyledText className="text-xs font-bold text-zinc-500 uppercase mb-4">Peak Hours (Visits)</StyledText>
+                            <StyledView className="flex-row items-end justify-between h-40 pt-4">
+                                {[30, 50, 80, 60, 90, 40, 20].map((h, i) => (
+                                    <StyledView key={i} className="items-center w-8">
+                                        <StyledView className="w-full bg-zinc-900 rounded-t-sm" style={{ height: `${h}%` }} />
+                                        <StyledText className="text-[10px] font-bold text-zinc-400 mt-1">{['6a', '9a', '12p', '3p', '6p', '9p', '12a'][i]}</StyledText>
+                                    </StyledView>
+                                ))}
+                            </StyledView>
+                        </StyledView>
+                        <StyledView className="bg-white p-6 shadow-xl border-t-4 border-lime-400 mb-6 rounded-lg">
+                            <StyledText className="text-xs font-bold text-zinc-500 uppercase mb-4">Popular Classes</StyledText>
+                            {[
+                                { name: 'Yoga Flow', count: 145, color: 'bg-emerald-500' },
+                                { name: 'HIIT Blast', count: 120, color: 'bg-orange-500' },
+                                { name: 'Spin Class', count: 98, color: 'bg-blue-500' },
+                            ].map((cls, idx) => (
+                                <StyledView key={idx} className="mb-3">
+                                    <StyledView className="flex-row justify-between mb-1">
+                                        <StyledText className="text-sm font-bold text-zinc-900">{cls.name}</StyledText>
+                                        <StyledText className="text-sm font-bold text-zinc-500">{cls.count}</StyledText>
+                                    </StyledView>
+                                    <StyledView className="h-2 bg-zinc-100 rounded-full overflow-hidden">
+                                        <StyledView className={`h-full ${cls.color}`} style={{ width: `${(cls.count / 150) * 100}%` }} />
+                                    </StyledView>
+                                </StyledView>
+                            ))}
+                        </StyledView>
+                    </StyledScrollView>
+                )}
+
+                {activeView === 'payments' && (
+                    <StyledView className="bg-white border border-zinc-200 rounded-lg overflow-hidden flex-1">
+                        <StyledView className="p-4 border-b border-zinc-200 bg-zinc-50">
+                            <StyledText className="text-xs font-bold text-zinc-500 uppercase">Recent Invoices</StyledText>
+                        </StyledView>
+                        <FlatList
+                            data={[
+                                { id: 'INV-001', user: 'John Doe', amount: '$49.99', status: 'Paid', date: 'Oct 25' },
+                                { id: 'INV-002', user: 'Jane Smith', amount: '$49.99', status: 'Pending', date: 'Oct 26' },
+                                { id: 'INV-003', user: 'Mike Ross', amount: '$149.99', status: 'Paid', date: 'Oct 24' },
+                            ]}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <StyledView className="flex-row p-4 border-b border-zinc-100 items-center justify-between">
+                                    <StyledView>
+                                        <StyledText className="font-bold text-zinc-900">{item.user}</StyledText>
+                                        <StyledText className="font-mono text-xs text-zinc-400">{item.id} • {item.date}</StyledText>
+                                    </StyledView>
+                                    <StyledView className="items-end">
+                                        <StyledText className="font-bold text-zinc-900">{item.amount}</StyledText>
+                                        <StyledText className={`text-[10px] font-bold uppercase ${item.status === 'Paid' ? 'text-emerald-600' : 'text-orange-500'}`}>{item.status}</StyledText>
+                                    </StyledView>
+                                </StyledView>
+                            )}
+                        />
                     </StyledView>
                 )}
             </StyledView>

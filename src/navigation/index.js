@@ -10,6 +10,13 @@ import BenefitsScreen from '../screens/BenefitsScreen';
 import PricingScreen from '../screens/PricingScreen';
 import MemberDashboard from '../screens/MemberDashboard';
 import AdminDashboard from '../screens/AdminDashboard';
+import WorkoutLogScreen from '../screens/WorkoutLogScreen';
+import BookingScreen from '../screens/BookingScreen';
+import NutritionScreen from '../screens/NutritionScreen';
+import ChatScreen from '../screens/ChatScreen';
+import StoreScreen from '../screens/StoreScreen';
+import BlogScreen from '../screens/BlogScreen';
+import SuccessStoriesScreen from '../screens/SuccessStoriesScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,6 +67,13 @@ const AppNavigator = () => {
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="MemberApp" component={MemberDashboard} />
                 <Stack.Screen name="Admin" component={AdminDashboard} />
+                <Stack.Screen name="WorkoutLog" component={WorkoutLogScreen} />
+                <Stack.Screen name="Booking" component={BookingScreen} />
+                <Stack.Screen name="Nutrition" component={NutritionScreen} />
+                <Stack.Screen name="Chat" component={ChatScreen} />
+                <Stack.Screen name="Store" component={StoreScreen} />
+                <Stack.Screen name="Blog" component={BlogScreen} />
+                <Stack.Screen name="SuccessStories" component={SuccessStoriesScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -17,7 +17,7 @@ The Gym App provides a seamless digital interface for gym members to access faci
 ### For Administrators
 *   **🛡️ Admin Panel**: Secure area for staff to manage gym operations.
 *   **📸 QR Scanner**: Built-in camera integration to scan member QR codes for check-ins.
-*   **📋 Member Management**: Create, view, and manage member profiles.
+*   **📋 Member Management**: Create, view, and manage member profiles.win
 *   **🖥️ Kiosk Mode**: Dedicated mode for front-desk check-ins.
 
 ## 🛠️ Technology Stack
